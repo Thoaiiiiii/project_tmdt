@@ -27,12 +27,18 @@ use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 
-
+use App\Http\Controllers\PaypalController; // <--- Add this line
 
 Route::get('/', [ShopController::class, 'home'])->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::get('/product/{product}', ProductDetailsController::class)->name('product');
+
+// Route::get('/paypal', function() {
+//     return view('paypal');
+// });
+Route::post('/capture-paypal-order/{orderId}', [PayPalController::class, 'captureOrder']);
+Route::post('/create-paypal-order', [PayPalController::class, 'createOrder']);
 
 
 // guest routes
@@ -92,6 +98,7 @@ Route::middleware('auth')->group(function(){
         Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
         Route::view('/ship_info', 'user.ship_info')->name('ship_info');
         Route::view('/setting', 'user.setting')->name('setting');
+
 
     });
     
